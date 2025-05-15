@@ -1,0 +1,26 @@
+nohup: ignoring input
+ * Serving Flask app 'app' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.31.22.135:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 124-198-087
+154.80.121.74 - - [15/May/2025 07:10:32] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRInyk3 HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:10:32] "POST /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRInysk&sid=qHNvmOkRI3gB--wtAAAA HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:10:32] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRInysm&sid=qHNvmOkRI3gB--wtAAAA HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:10:32] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=websocket&sid=qHNvmOkRI3gB--wtAAAA HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:10:33] "POST /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRIny-e&sid=qHNvmOkRI3gB--wtAAAA HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:13:51] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRIojLN HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:13:51] "POST /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRIojTg&sid=M2yYRZOOqyK2JiTpAAAC HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:13:51] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRIojTh&sid=M2yYRZOOqyK2JiTpAAAC HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:13:52] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=polling&t=PRIojcm&sid=M2yYRZOOqyK2JiTpAAAC HTTP/1.1" 200 -
+154.80.121.74 - - [15/May/2025 07:13:52] "GET /socket.io/?token=90c04994-b3d4-4663-9f75-d6733e40cc47&EIO=4&transport=websocket&sid=M2yYRZOOqyK2JiTpAAAC HTTP/1.1" 200 -
+ * Detected change in '/home/ubuntu/websocket_for_chat/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 124-198-087
