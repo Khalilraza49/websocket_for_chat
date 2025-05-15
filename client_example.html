@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Chat Client</title>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <script>
+        const socket = io('http://107.22.158.136:5000', {
+            query: {
+                token: '90c04994-b3d4-4663-9f75-d6733e40cc47'
+            }
+        });
+
+        // Connection handler
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket server');
+        });
+
+        // Message received handler
+        socket.on('receive_message', (message) => {
+            console.log('New message received:', message);
+            // Display message in your UI here
+        });
+
+        // Message sent confirmation
+        socket.on('message_sent', (message) => {
+            console.log('Message delivered:', message);
+        });
+
+        // Read receipt
+        socket.on('read_receipt', (receipt) => {
+            console.log('Message read:', receipt);
+        });
+
+        // Error handler
+        socket.on('error', (error) => {
+            console.error('Error:', error);
+        });
+
+        // Function to send text message
+        function sendTextMessage(receiverId, content) {
+            socket.emit('send_message', {
+                receiver_id: receiverId,
+                content: content
+            });
+        }
+
+        // Function to send media message
+        function sendMediaMessage(receiverId, content, attachment) {
+            socket.emit('send_message', {
+                receiver_id: receiverId,
+                content: content,
+                attachment: attachment
+            });
+        }
+
+        // Function to mark message as read
+        function markAsRead(messageId) {
+            socket.emit('mark_as_read', {
+                message_id: messageId
+            });
+        }
+    </script>
+</body>
+</html>
