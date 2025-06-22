@@ -1,0 +1,15 @@
+how to run this websocket
+1: run tmux attach -t runnig_app to check if tmux session exist or not
+2: if not then activate enviorment. source venv311/bin/activate
+3: install pip install -r requirements.txt
+4: run this command python3 app.py
+socketio.run(app, host='0.0.0.0', port=5001, debug=True)
+is used to run a Flask-SocketIO app, where:
+
+socketio is the SocketIO instance initialized with your Flask app
+
+host='0.0.0.0' makes it accessible from outside the server (e.g., over your EC2 public IP)
+
+port=5001 runs the app on port 5001
+
+debug=True enables Flask’s debug mode (helpful for development)
