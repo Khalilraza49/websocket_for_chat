@@ -13,3 +13,6 @@ host='0.0.0.0' makes it accessible from outside the server (e.g., over your EC2 
 port=5001 runs the app on port 5001
 
 debug=True enables Flask’s debug mode (helpful for development)
+
+
+https://us-east-1.console.aws.amazon.com/ec2-instance-connect/ssh/home?addressFamily=ipv4&connType=standard&instanceId=i-0f707517030f89be9&osUser=ubuntu&region=us-east-1&sshPort=22#
