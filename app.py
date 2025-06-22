@@ -1,12 +1,12 @@
 import os
-from flask import Flask, request, jsonify
+import requests
+from flask import Flask, request, jsonify, session
 from flask_socketio import SocketIO, emit, join_room
 import jwt
 from datetime import datetime
 import mysql.connector
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -40,10 +40,13 @@ def authenticate(token):
 @socketio.on('connect')
 def handle_connect():
     token = request.args.get('token')
+    print(token)
+    print('connection request')
     if not token:
         return False
     
     user_id = authenticate(token)
+    print(user_id)
     if not user_id:
         return False
     
@@ -111,6 +114,24 @@ def handle_send_message(data):
         message_id = cursor.lastrowid
         conn.commit()
         print('gogin to responde back') 
+        # Prepare and send push notification via API
+        notification_payload = {
+             'sender_id': int(data['sender_id']),
+             'receiver_id': int(data['receiver_id'])
+        }
+        headers = {
+            'User-Agent': 'PostmanRuntime/7.36.3',
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'x-api-key': '90c04994-b3d4-4663-9f75-d6733e40cc47'
+        }
+        response = requests.post(
+            'https://takavitutors.com/api/v1/send-chat-push-notifications',
+            json=notification_payload,
+            headers=headers
+        )
+
+        print('[API] Push notification sent. Response:', response.status_code, response.text)
         # Add message ID to response
         message_data['id'] = message_id
         message_data['status'] = 'delivered'
