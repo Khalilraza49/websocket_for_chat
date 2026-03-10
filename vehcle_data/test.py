@@ -1,87 +1,71 @@
-
 import requests
 import pandas as pd
-from tqdm import tqdm
-import time
+from time import sleep
 import json
-import re
-import os
+from tqdm import tqdm
 
 BASE_URL = "https://www.carqueryapi.com/api/0.3/"
 HEADERS = {'User-Agent': 'Mozilla/5.0'}
-CSV_PATH = "vehicle_full_data.csv"
+OUTPUT_FILE = "car_trims_1975_2025.csv"
+START_YEAR = 1975
+END_YEAR = 1976
+DELAY = 1  # seconds between requests
 
-# Extract JSON from JSONP
-def parse_jsonp(jsonp):
+def get_trims(year):
+    """Fetch trim data for a specific year"""
+    url = f"{BASE_URL}?cmd=getTrims&year={year}"
     try:
-        match = re.search(r'\?\((\{.*\})\);?', jsonp)
-        if match:
-            return json.loads(match.group(1))
-        elif jsonp.strip().startswith("{"):
-            return json.loads(jsonp)
-        else:
-            raise ValueError("No valid JSON found")
+        response = requests.get(url, headers=HEADERS)
+        if response.status_code == 200:
+            # Handle JSONP response
+            if response.text.startswith('?(') and response.text.endswith(')'):
+                json_str = response.text[2:-1]
+                data = json.loads(json_str)
+                if 'Trims' in data:
+                    # Add year to each trim record
+                    for trim in data['Trims']:
+                        trim['year'] = year
+                    return {
+                        'trims': data['Trims'],
+                        'count': len(data['Trims'])
+                    }
+        return {'trims': [], 'count': 0}
     except Exception as e:
-        print("Parsing error:", e)
-        return {}
+        print(f"Error fetching year {year}: {e}")
+        return {'trims': [], 'count': 0}
 
-# Get trims for one year
-def get_trims_by_year(year):
-    params = {
-        'cmd': 'getTrims',
-        'year': year,
-        'sold_in_us': 1
-    }
-    try:
-        res = requests.get(BASE_URL, params=params, headers=HEADERS)
-        if res.status_code != 200 or not res.text:
-            print(f"❌ Failed to get trims for {year}")
-            return []
-        return parse_jsonp(res.text).get("Trims", [])
-    except Exception as e:
-        print(f"⚠️ Error fetching trims for {year}: {e}")
-        return []
-
-# Load previous data if exists
-def load_existing_data():
-    if os.path.exists(CSV_PATH):
-        print(f"🔁 Loading existing data from {CSV_PATH}")
-        return pd.read_csv(CSV_PATH)
-    return pd.DataFrame()
-
-# Main function
 def main():
-    existing_df = load_existing_data()
-    all_data = existing_df.to_dict("records")
-    processed_years = set(existing_df["model_year"].unique()) if "model_year" in existing_df else set()
-
-    years = range(1975, 2026)
-
-    for year in tqdm(years, desc="Processing Years"):
-        if str(year) in processed_years:
-            print(f"⏩ Skipping already-processed year: {year}")
-            continue
-
-        try:
-            trims = get_trims_by_year(year)
-            all_data.extend(trims)
-
-            # Save immediately
-            df = pd.DataFrame(all_data)
-            df.to_csv(CSV_PATH, index=False)
-            print(f"✅ Year {year} saved ({len(trims)} rows added)")
-            time.sleep(0.2)
-
-        except Exception as e:
-            print(f"❗ Error during year {year}: {e}")
-            # Save partial progress anyway
-            df = pd.DataFrame(all_data)
-            df.to_csv(CSV_PATH, index=False)
-            print("📝 Partial data saved before exiting.")
-            break
-
-    print(f"\n📦 Final saved file: {CSV_PATH} ({len(all_data)} rows)")
+    all_trims = []
+    year_counts = {}
+    
+    # Initialize progress bar
+    pbar = tqdm(range(START_YEAR, END_YEAR + 1), desc="Fetching data")
+    
+    for year in pbar:
+        pbar.set_description(f"Fetching year {year}")
+        result = get_trims(year)
+        if result['trims']:
+            all_trims.extend(result['trims'])
+            year_counts[year] = result['count']
+            pbar.set_postfix({
+                'Current Year Count': result['count'],
+                'Total Trims': len(all_trims)
+            })
+        sleep(DELAY)  # Be polite to the API
+    
+    if all_trims:
+        # Convert to DataFrame and save as CSV
+        df = pd.DataFrame(all_trims)
+        df.to_csv(OUTPUT_FILE, index=False)
+        
+        # Print year-wise counts
+        print("\nYear-wise Trim Counts:")
+        for year in sorted(year_counts.keys()):
+            print(f"{year}: {year_counts[year]} trims")
+        
+        print(f"\nSuccess! Saved {len(df)} total records to {OUTPUT_FILE}")
+    else:
+        print("\nNo data was collected.")
 
 if __name__ == "__main__":
     main()
-
