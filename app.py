@@ -82,7 +82,7 @@ def handle_send_message(data):
         'message_date_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'sender_delete': 0,
         'reciver_delete': 0,
-        'is_read': 0
+        'is_read': 1
     }
     
     # Handle media attachments
